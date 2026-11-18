@@ -1,9 +1,9 @@
 import vk_api
-
+from find_open_windows import link_data
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 
 
-with open("./token.txt", "r") as file:
+with open("./user_data/token.txt", "r") as file:
     TOKEN = file.read()
 
 def send(user_id, msg):
@@ -17,8 +17,12 @@ for event in longpoll.listen():
     
     
     if event.type == VkBotEventType.MESSAGE_NEW:
-        print(event.message.from_id)
-        send(event.message.from_id, "Hello, world!")
+        user_id = event.message.from_id
+        if event.message.text == "Расписание":
+            msg = link_data()
+            send(user_id, msg)
+        else:
+            send(user_id, "Hello, world!")
         
 
 
