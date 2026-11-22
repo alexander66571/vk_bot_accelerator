@@ -17,7 +17,7 @@ def link_data():
     add_list = []
     res = dict()
     for i in groups:
-        add_list += [[l["датаНачала"], i, l["дисциплина"]] for l in web.get(f"{http}/api/Rasp?idGroup={i}&sdate={date}", timeout=10).json()["data"]["rasp"]]
+        add_list += [[l["датаНачала"]+"---"+l["датаОкончания"], i, l["дисциплина"]] for l in web.get(f"{http}/api/Rasp?idGroup={i}&sdate={date}", timeout=10).json()["data"]["rasp"]]
 
     add_list.sort()
 
@@ -45,10 +45,10 @@ def link_data():
     with open("./user_data/output_request.txt", "w") as file:
         file.write(text)
         
-    #print(text)
+    
     
     return text
 
 
 if __name__ == "__main__":
-    link_data()
+    print(link_data())
