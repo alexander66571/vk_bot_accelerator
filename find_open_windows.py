@@ -49,6 +49,44 @@ def link_data():
     
     return text
 
+def test():
+    
+    dict_a = {0: "Понедельник", 1: "Вторник", 2: "Среда", 3: "Четверг", 4: "Пятница", 5: "Суббота", 6: "Воскресенье"}
+    dict_b = {"8:30": "1 пара", "10:15": "2 пара", "12:40": "3 пара", "14:25": "4 пара", "16:10": "5 пара", "17:55": "6 пара", "19:40": "7 пара"}
+    date = time.strftime("%Y-%m-%d", time.localtime())
+    
+    add = list()
+    for i in groups:
+        for l in web.get(f"{http}/api/Rasp?idGroup={i}&sdate={date}", timeout=10).json()["data"]["rasp"]:
+            a = time.strptime(l["датаНачала"], "%Y-%m-%dT%H:%M:%S")
+
+            add.append([dict_a[a.tm_wday], dict_b[f"{a.tm_hour}:{a.tm_min}"], i, l["дисциплина"]])
+    add.sort()
+    print(list(add))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
-    print(link_data())
+    #print(link_data())
+    test()
