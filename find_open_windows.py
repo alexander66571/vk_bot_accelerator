@@ -18,19 +18,6 @@ def link_data():
     
     for group in groups:
         for lesson in web.get(f"{http}/api/Rasp?idGroup={group}&sdate={date}", timeout=10).json()["data"]["rasp"]:
-            
-<<<<<<< Updated upstream
-    with open("./user_data/output_request.txt", "w") as file:
-        file.write(text)
-        
-    
-    
-    return text
-
-
-if __name__ == "__main__":
-    print(link_data())
-=======
             b = lesson["датаНачала"][lesson["датаНачала"].find("T")+1:-3]+"-"+lesson["датаОкончания"][lesson["датаОкончания"].find("T")+1:-3]
             struct[lesson["день_недели"]][b][group] = lesson["дисциплина"]
             
@@ -79,24 +66,8 @@ def rasp():
 
     return ans
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
     #print(link_data())
     print(open_windows())
     print(rasp())
->>>>>>> Stashed changes
+
