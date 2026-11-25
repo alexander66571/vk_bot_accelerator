@@ -3,6 +3,7 @@ from tkinter import ttk
 import requests as web
 import time
 
+weekends = False
 
 with open("./user_data/groups.txt", "r") as file:
     groups = file.read().split(";")
@@ -12,36 +13,13 @@ with open("./user_data/http.txt", "r") as file:
 
     
 def link_data():
-    
+    struct = {i: {l: {g: "" for g in groups} for l in ['08:30-10:05', '10:15-11:50', '12:40-14:15', '14:25-16:00', '16:10-17:45', '17:55-19:30', '19:40-21:15']} for i in ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]}
     date = time.strftime("%Y-%m-%d", time.localtime())
-    add_list = []
-    res = dict()
-    for i in groups:
-        add_list += [[l["датаНачала"]+"---"+l["датаОкончания"], i, l["дисциплина"]] for l in web.get(f"{http}/api/Rasp?idGroup={i}&sdate={date}", timeout=10).json()["data"]["rasp"]]
-
-    add_list.sort()
-
-    for i in add_list:
-        if i[0] not in res.keys():
-            res[i[0]] = {i[1] : i[2]}
-        else:
-            res[i[0]][i[1]] = i[2]
-
-        
-    text = ""
-    g = ""
-    for i in res.keys():
-        if str(i[:i.find("T")]) != g:
-            g = str(i[:i.find("T")])
-            text += "\n"
-        wrt = str(i) + "\t"
-        for l in groups:
-            try:
-                wrt += str(res[i][l])[:11] + "\t"
-            except:
-                wrt += "          \t"
-        text += wrt + "\n"
+    
+    for group in groups:
+        for lesson in web.get(f"{http}/api/Rasp?idGroup={group}&sdate={date}", timeout=10).json()["data"]["rasp"]:
             
+<<<<<<< Updated upstream
     with open("./user_data/output_request.txt", "w") as file:
         file.write(text)
         
@@ -52,3 +30,73 @@ def link_data():
 
 if __name__ == "__main__":
     print(link_data())
+=======
+            b = lesson["датаНачала"][lesson["датаНачала"].find("T")+1:-3]+"-"+lesson["датаОкончания"][lesson["датаОкончания"].find("T")+1:-3]
+            struct[lesson["день_недели"]][b][group] = lesson["дисциплина"]
+            
+    return struct
+
+
+def open_windows():
+    struct = link_data()
+
+    ans = "Свободные окна\n"
+    for i in struct.keys():
+        if i in ["Суббота", "Воскресенье"] and weekends == False:
+            continue
+        else:
+            ans += i+":"
+        for l in struct[i].keys():
+            p = 0
+            for k in struct[i][l].keys():
+                if struct[i][l][k] == "":
+                    p += 1
+            if p == 4:
+                ans += l+"; "
+        ans += "\n"
+
+    return ans
+
+
+def rasp():
+    struct = link_data()
+
+    ans = "Расписание \n"
+    for i in struct.keys():
+        if i in ["Суббота", "Воскресенье"] and weekends == False:
+            continue
+        else:
+            ans += i + ":\n"
+        for l in struct[i].keys():
+            ans += l + "\t"
+            for k in struct[i][l].keys():
+                if struct[i][l][k] == "":
+                    ans += "          \t"
+                else:
+                    ans += struct[i][l][k][:10] + "\t"
+            ans += "\n"
+        ans += "\n"
+
+    return ans
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    #print(link_data())
+    print(open_windows())
+    print(rasp())
+>>>>>>> Stashed changes

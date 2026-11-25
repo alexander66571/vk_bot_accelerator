@@ -1,5 +1,5 @@
 import vk_api
-from find_open_windows import link_data
+from find_open_windows import rasp, open_windows
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 
 
@@ -26,7 +26,7 @@ for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             peer_id = event.message.peer_id
             msg = msg_clear(event.message.text)
-            
+            print(msg)
             for i in msg:
                 if "all" in i or "online" in i:
                     break
@@ -35,7 +35,10 @@ for event in longpoll.listen():
                     continue
                 
                 elif i == "расписание":
-                    send(peer_id, link_data())
+                    send(peer_id, rasp())
+
+                elif i == "окна":
+                    send(peer_id, open_windows())
 
                 else:
                     send(peer_id, i)
